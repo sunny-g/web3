@@ -110,13 +110,14 @@ defmodule Web3.Hex do
     iex> Web3.Hex.add_prefix("0xAfxyz")
     { :ok, "0xAfxyz" }
   """
-  @spec add_prefix(bitstring) :: { :ok, hex_string } | { :error, bitstring }
+  @spec add_prefix(bitstring) :: {:ok, hex_string} | {:error, bitstring}
   def add_prefix(str) when is_bitstring(str) do
     if has_prefix?(str) do
-      { :ok, str }
+      {:ok, str}
     else
-      new = pad_left(str, @prefix)
-      { :ok, new }
+      str
+      |> pad_left(@prefix)
+      |> OK.success
     end
   end
 
@@ -139,13 +140,14 @@ defmodule Web3.Hex do
     iex> Web3.Hex.remove_prefix("0")
     { :error, "Invalid hexadecimal bitstring" }
   """
-  @spec remove_prefix(hex_string) :: { :ok, bitstring } | { :error, bitstring }
+  @spec remove_prefix(hex_string) :: {:ok, bitstring} | {:error, bitstring}
   def remove_prefix(str) when is_bitstring(str) do
-    if !has_prefix?(str) do
-      { :error, @invalid_hex_error }
-    else
-      trim_left(str, @prefix_byte_size)
+    if has_prefix?(str) do
+      str
+      |> trim_left(@prefix_byte_size)
       |> OK.success
+    else
+      {:error, @invalid_hex_error}
     end
   end
 
@@ -200,9 +202,10 @@ defmodule Web3.Hex do
     iex> Web3.Hex.from_int(256)
     { :ok, "0x0100" }
   """
-  @spec from_int(non_neg_integer) :: { :ok, bitstring } | { :error, bitstring }
+  @spec from_int(non_neg_integer) :: {:ok, bitstring} | {:error, bitstring}
   def from_int(int) when is_integer(int) do
-    :binary.encode_unsigned(int)
+    int
+    |> :binary.encode_unsigned
     |> Base.encode16(case: :lower)
     |> add_prefix
   end
@@ -227,21 +230,22 @@ defmodule Web3.Hex do
     iex> Web3.Hex.to_int("0xAfxyz")
     { :error, "Invalid hexadecimal bitstring" }
   """
-  @spec to_int(bitstring) :: { :ok, non_neg_integer } | { :error, bitstring }
+  @spec to_int(bitstring) :: {:ok, non_neg_integer} | {:error, bitstring}
   def to_int(hex) when is_bitstring(hex) do
-    if !is_hex?(hex) do
-      { :error, @invalid_hex_error }
-    else
+    if is_hex?(hex) do
       OK.with do
         # TODO: fix issues with dialyzer here
         hex <- remove_prefix(hex)
         # TODO: fix issues with dialyzer here
         bin <- hex
-          |> pad_to_even_length
-          |> Base.decode16(case: :mixed)
-        :binary.decode_unsigned(bin)
-          |> OK.success
+        |> pad_to_even_length
+        |> Base.decode16(case: :mixed)
+        bin
+        |> :binary.decode_unsigned
+        |> OK.success
       end
+    else
+      {:error, @invalid_hex_error}
     end
   end
 

@@ -29,11 +29,10 @@ defmodule Web3.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      # for chaining tagged-tuple-returning functions
       {:ok, "~> 1.6"},
-      # live-reloading of tests
       {:mix_test_watch, "~> 0.3", only: [:dev], runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:credo, "~> 0.8.0-rc6", only: [:dev, :test], runtime: false}
    ]
   end
 end
