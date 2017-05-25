@@ -110,7 +110,7 @@ defmodule Web3.Hex do
     iex> Web3.Hex.add_prefix("0xAfxyz")
     { :ok, "0xAfxyz" }
   """
-  @spec add_prefix(bitstring) :: { :ok, hex_string }
+  @spec add_prefix(bitstring) :: { :ok, hex_string } | { :error, bitstring }
   def add_prefix(str) when is_bitstring(str) do
     if has_prefix?(str) do
       { :ok, str }
@@ -139,7 +139,7 @@ defmodule Web3.Hex do
     iex> Web3.Hex.remove_prefix("0")
     { :error, "Invalid hexadecimal bitstring" }
   """
-  @spec remove_prefix(hex_string) :: { :ok, bitstring }
+  @spec remove_prefix(hex_string) :: { :ok, bitstring } | { :error, bitstring }
   def remove_prefix(str) when is_bitstring(str) do
     if !has_prefix?(str) do
       { :error, @invalid_hex_error }
@@ -200,7 +200,7 @@ defmodule Web3.Hex do
     iex> Web3.Hex.from_int(256)
     { :ok, "0x0100" }
   """
-  @spec from_int(non_neg_integer) :: { :ok, bitstring }
+  @spec from_int(non_neg_integer) :: { :ok, bitstring } | { :error, bitstring }
   def from_int(int) when is_integer(int) do
     :binary.encode_unsigned(int)
     |> Base.encode16(case: :lower)
@@ -227,18 +227,20 @@ defmodule Web3.Hex do
     iex> Web3.Hex.to_int("0xAfxyz")
     { :error, "Invalid hexadecimal bitstring" }
   """
-  @spec to_int(bitstring) :: { :ok, non_neg_integer }
+  @spec to_int(bitstring) :: { :ok, non_neg_integer } | { :error, bitstring }
   def to_int(hex) when is_bitstring(hex) do
     if !is_hex?(hex) do
       { :error, @invalid_hex_error }
     else
       OK.with do
+        # TODO: fix issues with dialyzer here
         hex <- remove_prefix(hex)
+        # TODO: fix issues with dialyzer here
         bin <- hex
           |> pad_to_even_length
           |> Base.decode16(case: :mixed)
         :binary.decode_unsigned(bin)
-        |> OK.success
+          |> OK.success
       end
     end
   end

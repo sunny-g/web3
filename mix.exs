@@ -32,7 +32,8 @@ defmodule Web3.Mixfile do
       # for chaining tagged-tuple-returning functions
       {:ok, "~> 1.6"},
       # live-reloading of tests
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.3", only: [:dev], runtime: false},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
    ]
   end
 end
