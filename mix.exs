@@ -3,7 +3,7 @@ defmodule Web3.Mixfile do
 
   def project do
     [app: :web3,
-     version: "0.1.0",
+     version: "0.0.1",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -28,6 +28,11 @@ defmodule Web3.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      # for chaining tagged-tuple-returning functions
+      {:ok, "~> 1.6"},
+      # live-reloading of tests
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+   ]
   end
 end
