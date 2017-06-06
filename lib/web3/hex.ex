@@ -190,23 +190,31 @@ defmodule Web3.Hex do
 
   ## Example
     iex> Web3.Hex.from_int(0)
-    { :ok, "0x00" }
+    { :ok, "0x0" }
 
     iex> Web3.Hex.from_int(1)
-    { :ok, "0x01" }
+    { :ok, "0x1" }
 
     iex> Web3.Hex.from_int(255)
     { :ok, "0xff" }
 
     iex> Web3.Hex.from_int(256)
-    { :ok, "0x0100" }
+    { :ok, "0x100" }
   """
   @spec from_int(non_neg_integer) :: {:ok, bitstring} | {:error, bitstring}
   def from_int(int) when is_integer(int) do
-    int
+    str = int
     |> :binary.encode_unsigned
     |> Base.encode16(case: :lower)
-    |> add_prefix
+
+    if binary_part(str, 0, 1) === "0" do
+      str
+      |> trim_left(1)
+      |> add_prefix
+    else
+      str
+      |> add_prefix
+    end
   end
 
   @doc ~s"""
