@@ -21,3 +21,6 @@ erl_crash.dump
 
 # extra
 *.sublime*
+
+# config
+schema.json
