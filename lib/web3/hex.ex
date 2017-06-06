@@ -5,8 +5,10 @@ defmodule Web3.Hex do
 
   require OK
 
+  @regex              ~r/^0x[0-9A-Fa-f]+$/
   @prefix             "0x"
   @prefix_byte_size   2
+  # TODO: look at https://github.com/tallakt/codepagex/blob/master/lib/codepagex/error.ex for modelling errors, possibly move all errors to another module
   @invalid_hex_error  "Invalid hexadecimal bitstring"
 
   @typedoc """
@@ -20,9 +22,12 @@ defmodule Web3.Hex do
 
   @doc """
   Determines if bitstring is a valid hex string
-  Optionally, you can also specify the byte_length that the hex string should be
+  Optionally, you can specify the `byte_length` that the hex string should conform to
 
   ## Example
+    iex> Web3.Hex.is_hex?("0xAff")
+    true
+
     iex> Web3.Hex.is_hex?("0xaf", 1)
     true
 
@@ -34,9 +39,6 @@ defmodule Web3.Hex do
 
     iex> Web3.Hex.is_hex?("0xAff", 1)
     false
-
-    iex> Web3.Hex.is_hex?("0xAff")
-    true
 
     iex> Web3.Hex.is_hex?("0x0Aff", 2)
     true
@@ -59,12 +61,12 @@ defmodule Web3.Hex do
     iex> Web3.Hex.is_hex?("0xaf", 2)
     false
   """
+  @spec is_hex?(bitstring) :: boolean
   @spec is_hex?(bitstring, non_neg_integer) :: boolean
+  def is_hex?(str) when is_bitstring(str), do: Regex.match?(@regex, str)
   def is_hex?(str, byte_length) when is_bitstring(str) do
     if byte_size(str) !== ((2 * byte_length) + 2), do: false, else: is_hex?(str)
   end
-  @spec is_hex?(bitstring) :: boolean
-  def is_hex?(str) when is_bitstring(str), do: Regex.match?(~r/^0x[0-9A-Fa-f]+$/, str)
 
   @doc """
   Determines if bitstring begins with "0x"
@@ -86,12 +88,9 @@ defmodule Web3.Hex do
     false
   """
   @spec has_prefix?(bitstring) :: boolean
+  def has_prefix?(str) when is_bitstring(str) and byte_size(str) < @prefix_byte_size, do: false
   def has_prefix?(str) when is_bitstring(str) do
-    if byte_size(str) < @prefix_byte_size do
-      false
-    else
-      @prefix === binary_part(str, 0, @prefix_byte_size)
-    end
+    @prefix === binary_part(str, 0, @prefix_byte_size)
   end
 
   @doc """
@@ -232,7 +231,9 @@ defmodule Web3.Hex do
   """
   @spec to_int(bitstring) :: {:ok, non_neg_integer} | {:error, bitstring}
   def to_int(hex) when is_bitstring(hex) do
-    if is_hex?(hex) do
+    unless is_hex?(hex) do
+      {:error, @invalid_hex_error}
+    else
       OK.with do
         # TODO: fix issues with dialyzer here
         hex <- remove_prefix(hex)
@@ -244,8 +245,6 @@ defmodule Web3.Hex do
         |> :binary.decode_unsigned
         |> OK.success
       end
-    else
-      {:error, @invalid_hex_error}
     end
   end
 
