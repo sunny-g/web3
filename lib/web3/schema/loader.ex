@@ -6,8 +6,15 @@ defmodule Web3.Schema.Loader do
 
   import OK, only: ["~>>": 2]
 
-  @type methods_spec    :: %{bitstring => [[bitstring] | bitstring | non_neg_integer]}
-  @type objects_spec    :: %{bitstring => %{bitstring => [bitstring] | bitstring}}
+  @type primitives_spec   :: [bitstring]
+  @type combinations_spec :: [bitstring]
+  @type block_tags_spec   :: [bitstring]
+  @type methods_spec      :: %{
+    bitstring => [[bitstring] | bitstring | non_neg_integer]
+  }
+  @type objects_spec      :: %{
+    bitstring => %{bitstring => [bitstring] | bitstring}
+  }
   @type t :: %{
     required(:primitives)   => [bitstring],
     required(:combinations) => [bitstring],
@@ -46,19 +53,19 @@ defmodule Web3.Schema.Loader do
       @doc """
       Retrieves the primitive types
       """
-      @spec get_primitive_types :: [bitstring]
+      @spec get_primitive_types :: unquote(__MODULE__).primitives_spec
       def get_primitive_types, do: hd(@primitives)
 
       @doc """
       Retrieves the primitive types
       """
-      @spec get_combination_types :: [bitstring]
+      @spec get_combination_types :: unquote(__MODULE__).combinations_spec
       def get_combination_types, do: hd(@combinations)
 
       @doc """
       Retrieves the block tags
       """
-      @spec get_block_tags :: [bitstring]
+      @spec get_block_tags :: unquote(__MODULE__).block_tags_spec
       def get_block_tags, do: hd(@block_tags)
 
       @doc """
