@@ -153,7 +153,7 @@ defmodule Web3.Hex do
 
   @doc """
   Adds a leading "0" to the hex bitstring to make it an even-length bitstring
-  Optionally, the input hex can have the "0x" prefix which will be preserved
+  If the input bitstring has the "0x" prefix, it will be preserved
 
   ## Example
     iex> Web3.Hex.pad_to_even_length("")
