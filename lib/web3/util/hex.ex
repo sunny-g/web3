@@ -1,4 +1,4 @@
-defmodule Web3.Hex do
+defmodule Web3.Util.Hex do
   @moduledoc """
   Base-16 hexadecimal bitstring utility functions
   """
@@ -26,40 +26,40 @@ defmodule Web3.Hex do
   Optionally, you can specify the `byte_length` that the hex string should conform to
 
   ## Example
-    iex> Web3.Hex.is_hex?("0xAff")
+    iex> Web3.Util.Hex.is_hex?("0xAff")
     true
 
-    iex> Web3.Hex.is_hex?("0xaf", 1)
+    iex> Web3.Util.Hex.is_hex?("0xaf", 1)
     true
 
-    iex> Web3.Hex.is_hex?("0xAf", 1)
+    iex> Web3.Util.Hex.is_hex?("0xAf", 1)
     true
 
-    iex> Web3.Hex.is_hex?("0xAf", 2)
+    iex> Web3.Util.Hex.is_hex?("0xAf", 2)
     false
 
-    iex> Web3.Hex.is_hex?("0xAff", 1)
+    iex> Web3.Util.Hex.is_hex?("0xAff", 1)
     false
 
-    iex> Web3.Hex.is_hex?("0x0Aff", 2)
+    iex> Web3.Util.Hex.is_hex?("0x0Aff", 2)
     true
 
-    iex> Web3.Hex.is_hex?("0xAfFa", 2)
+    iex> Web3.Util.Hex.is_hex?("0xAfFa", 2)
     true
 
-    iex> Web3.Hex.is_hex?("0x", 0)
+    iex> Web3.Util.Hex.is_hex?("0x", 0)
     false
 
-    iex> Web3.Hex.is_hex?("af", 0)
+    iex> Web3.Util.Hex.is_hex?("af", 0)
     false
 
-    iex> Web3.Hex.is_hex?("0xafg", 1)
+    iex> Web3.Util.Hex.is_hex?("0xafg", 1)
     false
 
-    iex> Web3.Hex.is_hex?("0xaffg", 2)
+    iex> Web3.Util.Hex.is_hex?("0xaffg", 2)
     false
 
-    iex> Web3.Hex.is_hex?("0xaf", 2)
+    iex> Web3.Util.Hex.is_hex?("0xaf", 2)
     false
   """
   @spec is_hex?(bitstring) :: boolean
@@ -73,19 +73,19 @@ defmodule Web3.Hex do
   Determines if bitstring begins with "0x"
 
   ## Example
-    iex> Web3.Hex.has_prefix?("0xaf")
+    iex> Web3.Util.Hex.has_prefix?("0xaf")
     true
 
-    iex> Web3.Hex.has_prefix?("0xAfxyz")
+    iex> Web3.Util.Hex.has_prefix?("0xAfxyz")
     true
 
-    iex> Web3.Hex.has_prefix?("0x")
+    iex> Web3.Util.Hex.has_prefix?("0x")
     true
 
-    iex> Web3.Hex.has_prefix?("0")
+    iex> Web3.Util.Hex.has_prefix?("0")
     false
 
-    iex> Web3.Hex.has_prefix?("0a")
+    iex> Web3.Util.Hex.has_prefix?("0a")
     false
   """
   @spec has_prefix?(bitstring) :: boolean
@@ -98,16 +98,16 @@ defmodule Web3.Hex do
   Adds "0x" to a bitstring, unless it already has the prefix
 
   ## Example
-    iex> Web3.Hex.add_prefix("af")
+    iex> Web3.Util.Hex.add_prefix("af")
     { :ok, "0xaf" }
 
-    iex> Web3.Hex.add_prefix("0xaf")
+    iex> Web3.Util.Hex.add_prefix("0xaf")
     { :ok, "0xaf" }
 
-    iex> Web3.Hex.add_prefix("Afxyz")
+    iex> Web3.Util.Hex.add_prefix("Afxyz")
     { :ok, "0xAfxyz" }
 
-    iex> Web3.Hex.add_prefix("0xAfxyz")
+    iex> Web3.Util.Hex.add_prefix("0xAfxyz")
     { :ok, "0xAfxyz" }
   """
   @spec add_prefix(bitstring) :: {:ok, hex_string} | {:error, bitstring}
@@ -125,19 +125,19 @@ defmodule Web3.Hex do
   Removes leading "0x" from a bitstring, unless it is already missing the prefix
 
   ## Example
-    iex> Web3.Hex.remove_prefix("0xaf")
+    iex> Web3.Util.Hex.remove_prefix("0xaf")
     { :ok, "af" }
 
-    iex> Web3.Hex.remove_prefix("0xAfxyz")
+    iex> Web3.Util.Hex.remove_prefix("0xAfxyz")
     { :ok, "Afxyz" }
 
-    iex> Web3.Hex.remove_prefix("0x")
+    iex> Web3.Util.Hex.remove_prefix("0x")
     { :ok, "" }
 
-    iex> Web3.Hex.remove_prefix("Afxyz")
+    iex> Web3.Util.Hex.remove_prefix("Afxyz")
     { :error, "Invalid hexadecimal bitstring" }
 
-    iex> Web3.Hex.remove_prefix("0")
+    iex> Web3.Util.Hex.remove_prefix("0")
     { :error, "Invalid hexadecimal bitstring" }
   """
   @spec remove_prefix(hex_string) :: {:ok, bitstring} | {:error, bitstring}
@@ -156,19 +156,19 @@ defmodule Web3.Hex do
   If the input bitstring has the "0x" prefix, it will be preserved
 
   ## Example
-    iex> Web3.Hex.pad_to_even_length("")
+    iex> Web3.Util.Hex.pad_to_even_length("")
     ""
 
-    iex> Web3.Hex.pad_to_even_length("0")
+    iex> Web3.Util.Hex.pad_to_even_length("0")
     "00"
 
-    iex> Web3.Hex.pad_to_even_length("0af")
+    iex> Web3.Util.Hex.pad_to_even_length("0af")
     "00af"
 
-    iex> Web3.Hex.pad_to_even_length("0x0")
+    iex> Web3.Util.Hex.pad_to_even_length("0x0")
     "0x00"
 
-    iex> Web3.Hex.pad_to_even_length("0x0af")
+    iex> Web3.Util.Hex.pad_to_even_length("0x0af")
     "0x00af"
   """
   @spec pad_to_even_length(bitstring) :: bitstring
@@ -190,16 +190,16 @@ defmodule Web3.Hex do
   Converts an integer to a hex string
 
   ## Example
-    iex> Web3.Hex.from_int(0)
+    iex> Web3.Util.Hex.from_int(0)
     { :ok, "0x0" }
 
-    iex> Web3.Hex.from_int(1)
+    iex> Web3.Util.Hex.from_int(1)
     { :ok, "0x1" }
 
-    iex> Web3.Hex.from_int(255)
+    iex> Web3.Util.Hex.from_int(255)
     { :ok, "0xff" }
 
-    iex> Web3.Hex.from_int(256)
+    iex> Web3.Util.Hex.from_int(256)
     { :ok, "0x100" }
   """
   @spec from_int(non_neg_integer) :: {:ok, bitstring}
@@ -221,22 +221,22 @@ defmodule Web3.Hex do
 
   @doc ~s"""
   ## Example
-    iex> Web3.Hex.to_int("0x0")
+    iex> Web3.Util.Hex.to_int("0x0")
     { :ok, 0 }
 
-    iex> Web3.Hex.to_int("0x1")
+    iex> Web3.Util.Hex.to_int("0x1")
     { :ok, 1 }
 
-    iex> Web3.Hex.to_int("0xFF")
+    iex> Web3.Util.Hex.to_int("0xFF")
     { :ok, 255 }
 
-    iex> Web3.Hex.to_int("0xAf")
+    iex> Web3.Util.Hex.to_int("0xAf")
     { :ok, 175 }
 
-    iex> Web3.Hex.to_int("0x0af")
+    iex> Web3.Util.Hex.to_int("0x0af")
     { :ok, 175 }
 
-    iex> Web3.Hex.to_int("0xAfxyz")
+    iex> Web3.Util.Hex.to_int("0xAfxyz")
     { :error, "Invalid hexadecimal bitstring" }
   """
   @spec to_int(bitstring) :: {:ok, non_neg_integer} | {:error, bitstring}
