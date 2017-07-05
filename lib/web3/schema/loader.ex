@@ -10,10 +10,10 @@ defmodule Web3.Schema.Loader do
   @type combinations_spec :: [bitstring]
   @type block_tags_spec   :: [bitstring]
   @type methods_spec      :: %{
-    bitstring => [[bitstring] | bitstring | non_neg_integer]
+    bitstring => [bitstring | [] | [bitstring] | non_neg_integer | true]
   }
   @type objects_spec      :: %{
-    bitstring => %{bitstring => [bitstring] | bitstring}
+    bitstring => %{bitstring => bitstring | [] | [bitstring]}
   }
   @type t :: %{
     required(:primitives)   => [bitstring],
@@ -57,7 +57,7 @@ defmodule Web3.Schema.Loader do
       def get_primitive_types, do: hd(@primitives)
 
       @doc """
-      Retrieves the primitive types
+      Retrieves the combination types
       """
       @spec get_combination_types :: unquote(__MODULE__).combinations_spec
       def get_combination_types, do: hd(@combinations)
@@ -97,7 +97,7 @@ defmodule Web3.Schema.Loader do
   end
 end
 
-defmodule Web3.Schema.Schema do
+defmodule Web3.Schema.Spec do
   @moduledoc """
   Loads the local schema.json into module attributes for compilation
   """

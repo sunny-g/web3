@@ -8,22 +8,24 @@ defmodule Web3.Schema do
   input or output
   """
 
-  # require OK
+  require OK
   alias Web3.Schema.Primitive
   alias Web3.Schema.Complex
 
-  @doc false
+  @doc """
+  Validate a value against all known JSON-RPC primitive and complex types
+  """
   @spec validate(any, bitstring | [bitstring]) :: {:ok, boolean} | {:error, any}
   def validate(val, type) when is_bitstring(type) or is_list(type) do
-    is_primitive = Primitive.validate(val, type)
-
-    case is_primitive do
-      {:ok, true} -> {:ok, true}
+    case Primitive.validate(val, type) do
+      OK.success(true) -> OK.success(true)
       _ -> Complex.validate(val, type)
     end
   end
 
-  @doc false
+  @doc """
+  Determine if a value is a known JSON-RPC primitive and complex type
+  """
   @spec is_valid?(any, bitstring | [bitstring]) :: boolean
   def is_valid?(val, type) when is_bitstring(type) or is_list(type) do
     Primitive.is_valid?(val, type) or Complex.is_valid?(val, type)
