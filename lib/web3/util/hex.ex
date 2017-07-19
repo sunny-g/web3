@@ -19,7 +19,7 @@ defmodule Web3.Util.Hex do
     2. prefixed with "0x"
     3. only contains ASCII characters 0-9, A-F, and/or a-f
   """
-  @type hex_string :: bitstring
+  @type t :: bitstring
 
   @doc """
   Determines if bitstring is a valid hex string
@@ -110,7 +110,7 @@ defmodule Web3.Util.Hex do
     iex> Web3.Util.Hex.add_prefix("0xAfxyz")
     { :ok, "0xAfxyz" }
   """
-  @spec add_prefix(bitstring) :: {:ok, hex_string} | {:error, bitstring}
+  @spec add_prefix(bitstring) :: {:ok, t} | {:error, bitstring}
   def add_prefix(str) when is_bitstring(str) do
     if has_prefix?(str) do
       OK.success(str)
@@ -140,7 +140,7 @@ defmodule Web3.Util.Hex do
     iex> Web3.Util.Hex.remove_prefix("0")
     { :error, "Invalid hexadecimal bitstring" }
   """
-  @spec remove_prefix(hex_string) :: {:ok, bitstring} | {:error, bitstring}
+  @spec remove_prefix(t) :: {:ok, bitstring} | {:error, bitstring}
   def remove_prefix(str) when is_bitstring(str) do
     if has_prefix?(str) do
       str
