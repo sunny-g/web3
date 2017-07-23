@@ -7,8 +7,6 @@ defmodule Web3.Schema.Primitive do
   alias Web3.Schema.Spec
   alias Web3.Hex
 
-  @type bool      :: boolean
-  @type string    :: bitstring
   @type quantity  :: integer
   @type tag       :: bitstring
   @type d         :: binary
@@ -18,12 +16,12 @@ defmodule Web3.Schema.Primitive do
   @type d60       :: <<_::60>>
   @type d256      :: <<_::256>>
   @type array_d   :: d | [d, ...]
-  @type t         :: bool | string | quantity | tag | d | d8 | d20 | d32 | d60 | d256 | array_d
+  @type t         :: boolean | bitstring | quantity | tag | d | d8 | d20 | d32 | d60 | d256 | array_d
 
   @doc """
   Attempt to validate a value as an RPC primitive type
   """
-  @spec validate(primitive, bitstring) :: {:ok, boolean} | {:error, any}
+  @spec validate(t, bitstring) :: {:ok, boolean} | {:error, any}
   def validate(val, type) do
     try do
       is_valid(val, type) |> OK.success
@@ -35,7 +33,7 @@ defmodule Web3.Schema.Primitive do
   @doc """
   Determine if value is a valid RPC primitive type
   """
-  @spec is_valid?(primitive, bitstring) :: boolean
+  @spec is_valid?(t, bitstring) :: boolean
   def is_valid?(val, type) do
     try do
       is_valid(val, type)
