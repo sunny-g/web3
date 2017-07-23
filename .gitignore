@@ -21,6 +21,8 @@ erl_crash.dump
 
 # extra
 *.sublime*
+.DS_Store
+./**/.DS_Store
 
 # config
 schema.json
