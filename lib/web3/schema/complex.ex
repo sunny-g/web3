@@ -8,10 +8,7 @@ defmodule Web3.Schema.Complex.Combination do
 
   defmacro __using__(_) do
     for type <- Spec.get_combination_types do
-      quote [
-        location: :keep,
-        bind_quoted: [type: type],
-      ] do
+      quote location: :keep do
         @spec is_valid(any, bitstring) :: boolean
         defp is_valid(val, unquote(type)) do
           [ type1, type2 ] = String.split(unquote(type), "|")
@@ -56,7 +53,7 @@ defmodule Web3.Schema.Complex.Object do
   alias Web3.Schema.Primitive
 
   defmacro __using__(_) do
-    quote do
+    quote location: :keep do
       @spec is_valid(map, bitstring) :: boolean
       defp is_valid(object, _) when not is_map(object), do: false
 
