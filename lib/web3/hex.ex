@@ -9,7 +9,9 @@ defmodule Web3.Hex do
   @regex              ~r/^0x[0-9A-Fa-f]+$/
   @prefix             "0x"
   @prefix_byte_size   2
-  # TODO: look at https://github.com/tallakt/codepagex/blob/master/lib/codepagex/error.ex for modelling errors, possibly move all errors to another module
+  # TODO: look at
+  # https://github.com/tallakt/codepagex/blob/master/lib/codepagex/error.ex for modelling errors,
+  # possibly move all errors to another module
   @invalid_hex_error  :"invalid hexadecimal bitstring"
 
   @typedoc """
