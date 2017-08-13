@@ -7,7 +7,7 @@ defmodule Web3.Query.Macros do
 
   @doc_url  "https://github.com/ethereum/wiki/wiki/JSON-RPC#"
 
-  defmacro gen_doc(method_name) do
+  defp gen_doc(method_name) do
     quote do
       @doc """
       Sends a `#{unquote(method_name)}` request to the Ethereum JSON-RPC server
@@ -17,18 +17,16 @@ defmodule Web3.Query.Macros do
     end
   end
 
-  defmacro gen_spec(method_atom) do
-    quote do
+  defp gen_spec(method_atom) do
+    quote location: :keep do
       @spec unquote(method_atom)(any) :: any
     end
   end
 
-  def gen_method(method_name, method_description) do
+  defp gen_func(method_name, method_description) do
     method_atom = :"#{method_name}"
 
     quote location: :keep do
-      # unquote(gen_doc(method_name)))
-      # unquote(gen_spec(method_atom, method_description))
       def unquote(method_atom)(params \\ []) do
         # fill out spec inputs, required and optional
         # fill out fn inputs, required and optional
@@ -46,6 +44,16 @@ defmodule Web3.Query.Macros do
 
         send(%{method: unquote(method_name), params: params})
       end
+    end
+  end
+
+  def gen_method(method_name, method_description) do
+    method_atom = :"#{method_name}"
+
+    quote location: :keep do
+      unquote(gen_doc(method_name))
+      unquote(gen_spec(method_atom))
+      unquote(gen_func(method_name, method_description))
     end
   end
 end
